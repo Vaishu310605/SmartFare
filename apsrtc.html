@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartFare AP Prototype</title>
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: #e0f2e9;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+  }
+
+  .container {
+    display: flex;
+    gap: 20px;
+  }
+
+  /* Card Style */
+  .card {
+    width: 340px;
+    height: 240px;
+    background: #a8e6a3;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo {
+    width: 50px;
+    height: 50px;
+  }
+
+  .card-header h2 {
+    font-size: 16px;
+    color: #2e7d32;
+    margin: 0;
+  }
+
+  .user-info {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-top: 10px;
+  }
+
+  .user-photo {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background-size: cover;
+    background-position: center;
+    border: 2px solid #1b5e20;
+  }
+
+  .user-details {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+    color: #1b5e20;
+  }
+
+  .user-details .label { font-weight: 600; }
+
+  .barcode {
+    height: 35px;
+    margin-top: 12px;
+    background: repeating-linear-gradient(
+      90deg,
+      #111,
+      #111 2px,
+      #fff 2px,
+      #fff 4px
+    );
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-weight: bold;
+  }
+
+  .card-footer {
+    font-size: 13px;
+    color: #1b5e20;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+    font-weight: 500;
+  }
+
+  .note { font-size: 12px; color: #2e7d32; margin-top: 6px; }
+
+  /* Bus Info Panel */
+  .bus-panel {
+    width: 400px;
+    background: #f1f8f1;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    padding: 16px;
+  }
+  .bus-panel h3 { color: #2e7d32; }
+  .bus-info, .passenger-info, .booking-panel { margin-top: 12px; font-size: 14px; }
+  .booking-panel select, .booking-panel input { margin: 4px 0; width: 100%; padding: 6px; }
+  .booking-panel button { background: #2e7d32; color: #fff; padding: 8px; border: none; border-radius: 6px; cursor: pointer; }
+
+  .passenger-list { margin-top: 6px; background: #d0f0d0; padding: 6px; border-radius: 6px; max-height: 120px; overflow-y: auto; }
+
+</style>
+</head>
+<body>
+
+<div class="container">
+  <!-- User Card -->
+  <div class="card" id="user-card">
+    <div class="card-header">
+      <img class="logo" src= "C:\Users\vaishnavi\Desktop\APSRTC\apsrtc_logo.png">
+      <h2>SmartFare AP Card</h2>
+    </div>
+
+    <div class="user-info">
+      <div class="user-photo" id="user-photo"></div>
+      <div class="user-details">
+        <div><span class="label">Name:</span> <span id="user-name"></span></div>
+        <div><span class="label">Gender:</span> <span id="user-gender"></span></div>
+        <div><span class="label">Phone:</span> <span id="user-phone"></span></div>
+      </div>
+    </div>
+
+    <div class="barcode" id="barcode"></div>
+
+    <div class="card-footer">
+      <div id="category"></div>
+      <div id="aadhaar">Aadhaar Linked</div>
+    </div>
+
+    <div class="note">
+      For illiterate users, cash payment accepted.
+    </div>
+  </div>
+
+  <!-- Bus Panel -->
+  <div class="bus-panel">
+    <h3>Bus Information</h3>
+    <div class="bus-info">
+      <div><b>Bus No:</b> <span id="bus-no">AP-01-1234</span></div>
+      <div><b>Route:</b> <span id="bus-route">Madanapalle → Tirupati</span></div>
+      <div><b>Direction:</b> <span id="bus-direction">Forward</span></div>
+      <div><b>Seats:</b> <span id="bus-seats">40</span></div>
+      <div><b>Passengers onboard:</b> <span id="passenger-count">0</span></div>
+    </div>
+
+    <div class="passenger-info">
+      <div><b>Passenger List:</b></div>
+      <div class="passenger-list" id="passenger-list"></div>
+    </div>
+
+    <div class="booking-panel">
+      <h4>Board Passenger / Book Seat</h4>
+      <select id="user-select"></select>
+      <select id="destination-select">
+  <option value="Madanapalle→Kadiri">Madanapalle → Kadiri</option>
+  <option value="Madanapalle→Vijayawada">Madanapalle → Vijayawada</option>
+  <option value="Madanapalle→Angallu">Madanapalle → Angallu</option>
+  <option value="Madanapalle→Tirupati">Madanapalle → Tirupati</option>
+  <option value="Madanapalle→Chittoor">Madanapalle → Chittoor</option>
+  <option value="Madanapalle→Horsley Hills">Madanapalle → Horsley Hills (Tourist)</option>
+  <option value="Madanapalle→Talakona">Madanapalle → Talakona (Tourist)</option>
+  <option value="Madanapalle→Mylavaram">Madanapalle → Mylavaram</option>
+  <option value="Madanapalle→Pileru">Madanapalle → Pileru</option>
+</select>
+
+           <button onclick="boardPassenger()">Board Passenger</button>
+    </div>
+  </div>
+</div>
+<script>
+  // Mock Users Database with user images
+  const users = [
+    { name: "Vyshnavi Reddy", gender: "Female", phone: "9963601761", category: "Sthree Shakti (Free)", aadhaar: "Linked", barcodeId: "AP1234567890", photo: "vyshnavi.jpg" },
+    { name: "Vamshi Krishna", gender: "Male", phone: "9392530421", category: "Regular", aadhaar: "Linked", barcodeId: "AP9876543210", photo: "male1.jpg" },
+    { name: "Yuvanshika", gender: "Female", phone: "9012345678", category: "Sthree Shakti (Free)", aadhaar: "Linked", barcodeId: "AP5678901234", photo: "female1.jpg" },
+    { name: "Lakshmi Devi", gender: "Female", phone: "9938370655", category: "Disabled (26% Discount)", aadhaar: "Linked", barcodeId: "AP1128334455", photo: "Female2.jpg" }
+  ];
+
+  const bus = {
+    busNo: "AP-01-1234",
+    route: "Madanapalle → Tirupati",
+    direction: "Forward",
+    totalSeats: 40,
+    passengers: []
+  };
+
+  // ================== ADD FARE TABLE HERE ==================
+  const fareTable = {
+    "Madanapalle→Kadiri": 80,
+    "Madanapalle→Vijayawada": 700,
+    "Madanapalle→Angallu": 20,
+    "Madanapalle→Tirupati": 250,
+    "Madanapalle→Chittoor": 120,
+    "Madanapalle→Horsley Hills": 20,
+    "Madanapalle→Talakona": 90,
+    "Madanapalle→Mylavaram": 150,
+    "Madanapalle→Pileru": 60
+  };
+  // ==========================================================
+
+  // Populate Card with First User
+  let currentUserIndex = 0;
+  function loadCard(user) {
+    document.getElementById('user-name').innerText = user.name;
+    document.getElementById('user-gender').innerText = user.gender;
+    document.getElementById('user-phone').innerText = user.phone;
+    document.getElementById('category').innerText = `Category: ${user.category}`;
+    document.getElementById('barcode').innerText = user.barcodeId;
+    document.getElementById('user-photo').style.backgroundImage = `url('${user.photo}')`;
+  }
+  loadCard(users[currentUserIndex]);
+
+  // Populate user select dropdown
+  const userSelect = document.getElementById('user-select');
+  users.forEach((user, index) => {
+    const option = document.createElement('option');
+    option.value = index;
+    option.innerText = `${user.name} (${user.category})`;
+    userSelect.appendChild(option);
+  });
+
+  // Boarding function
+  function boardPassenger() {
+    const selectedIndex = parseInt(userSelect.value);
+    const passenger = users[selectedIndex];
+    const destination = document.getElementById('destination-select').value;
+
+    if (bus.passengers.length >= bus.totalSeats) {
+      alert("Bus Full! Cannot board more passengers.");
+      return;
+    }
+
+    if (bus.passengers.includes(passenger.name)) {
+      alert(`${passenger.name} is already onboard.`);
+      return;
+    }
+
+    bus.passengers.push(passenger.name);
+    document.getElementById('passenger-count').innerText = bus.passengers.length;
+
+    // Update passenger list
+    const passengerListDiv = document.getElementById('passenger-list');
+    passengerListDiv.innerHTML = "";
+    bus.passengers.forEach(p => {
+      const pDiv = document.createElement('div');
+      pDiv.innerText = `${p} → ${destination}`;
+      passengerListDiv.appendChild(pDiv);
+    });
+
+    alert(`${passenger.name} boarded to ${destination}! Fare: ${calculateFare(passenger)} Rs`);
+    loadCard(passenger);
+  }
+
+  // Fare calculation
+  function calculateFare(passenger) {
+    const selectedDestination = document.getElementById('destination-select').value;
+    let baseFare = fareTable[selectedDestination] || 50; // default 50 if not found
+
+    if (passenger.gender === "Female" && passenger.category.includes("Sthree Shakti")) return 0; // Girls free
+    if (passenger.age < 5) return Math.round(baseFare / 2); // Children below 5 → half fare
+    if (passenger.category.includes("Disabled") || passenger.category.includes("Old")) return Math.round(baseFare * 0.74); // 26% discount
+    return baseFare;
+  }
+</script>
+
+
+
+</body>
+</html>
