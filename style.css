@@ -1,0 +1,87 @@
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(120deg, #004aad, #6dd5fa);
+  color: #fff;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+header {
+  background: rgba(0,0,0,0.5);
+  padding: 10px;
+}
+header img {
+  width: 70px;
+  vertical-align: middle;
+}
+header h1 {
+  display: inline;
+  margin-left: 10px;
+  font-size: 1.8rem;
+}
+
+nav {
+  background: rgba(0,0,0,0.3);
+  padding: 10px;
+}
+nav button {
+  margin: 10px;
+  padding: 10px 20px;
+  border: none;
+  background: #ffcc00;
+  border-radius: 8px;
+  cursor: pointer;
+  color: black;
+  font-weight: bold;
+}
+
+.section {
+  display: none;
+  padding: 20px;
+  background: rgba(255,255,255,0.1);
+  margin: 20px;
+  border-radius: 12px;
+}
+.section.active {
+  display: block;
+}
+
+label {
+  display: block;
+  margin: 10px 0 5px;
+}
+
+input, select {
+  padding: 8px;
+  border-radius: 8px;
+  border: none;
+  margin-bottom: 10px;
+  width: 80%;
+  max-width: 300px;
+}
+
+button {
+  background: #ffcc00;
+  color: black;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+table {
+  width: 90%;
+  margin: 20px auto;
+  border-collapse: collapse;
+}
+table th, table td {
+  border: 1px solid #fff;
+  padding: 8px;
+}
+footer {
+  background: rgba(0,0,0,0.3);
+  padding: 10px;
+  font-size: 0.9rem;
+}

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartFare – Bank Link</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h2>Bank Account Linking</h2>
+
+    <label>Card ID:</label>
+    <input type="text" id="cardId" placeholder="Enter Card ID" />
+
+    <label>Bank Account Number:</label>
+    <input type="text" id="bankAcc" placeholder="Enter Account No." />
+
+    <label>Set a 4-digit PIN:</label>
+    <input type="password" id="pin" maxlength="4" placeholder="****" />
+
+    <button onclick="linkBank()">Link Account</button>
+    <p id="msg"></p>
+
+    <div id="balanceBox" style="display:none;">
+      <h3>Balance: ₹<span id="balanceAmount">0</span></h3>
+      <button onclick="generateQR()">Generate QR for Payment</button>
+      <div id="qrcode"></div>
+    </div>
+
+    <a href="index.html">← Back to Ticket Page</a>
+  </div>
+
+  <script src="bank.js"></script>
+</body>
+</html>

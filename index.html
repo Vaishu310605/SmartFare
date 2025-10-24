@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartFare System</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+  <script src="script.js" defer></script>
+</head>
+<body>
+
+  <nav>
+    <button onclick="showSection('ticketSection')">Ticket</button>
+    <button onclick="showSection('bankSection')">Bank</button>
+    <button onclick="showSection('dashboardSection')">Dashboard</button>
+  </nav>
+
+  <!-- ------------------- Ticket Section ------------------- -->
+  <div id="ticketSection" class="section">
+    <h2>Ticket Payment</h2>
+
+    <label>Card ID:</label>
+    <input type="text" id="cardId" placeholder="Enter Card ID">
+
+    <label>From:</label>
+    <select id="fromStop">
+      <option>Choose Stop</option>
+      <option>Vijayawada</option>
+      <option>Guntur</option>
+      <option>Kurnool</option>
+      <option>Mantralayam</option>
+      <option>Nellore</option>
+      <option>Tirupati</option>
+    </select>
+
+    <label>To:</label>
+    <select id="toStop">
+      <option>Choose Stop</option>
+      <option>Vijayawada</option>
+      <option>Guntur</option>
+      <option>Nellore</option>
+      <option>Tirupati</option>
+      <option>Kurnool</option>
+      <option>Mantralayam</option>
+    
+    </select>
+
+    <!-- Ticket Fare Button -->
+    <button onclick="calculateFare()">Pay Fare</button>
+    <p id="result"></p>
+  </div>
+
+  <!-- ------------------- Bank Section ------------------- -->
+  <div id="bankSection" class="section" style="display:none">
+    <h2>Bank Account Linking</h2>
+
+    <label>Card ID:</label>
+    <input type="text" id="bankCardId" placeholder="Enter Card ID">
+
+    <label>Bank Account Number:</label>
+    <input type="text" id="bankAcc" placeholder="Enter Account No.">
+    <label>Set a 4-digit PIN:</label>
+<input type="password" id="pin" maxlength="4" placeholder="****">
+
+<label>Gender:</label>
+<select id="gender">
+  <option value="Male">Male</option>
+  <option value="Female">Female</option>
+</select>
+
+<button onclick="linkBank()">Link Account</button>
+
+        <p id="msg"></p>
+
+    <div id="balanceBox" style="display:none;">
+      <h3>Balance: ₹<span id="balanceAmount">0</span></h3>
+      <button onclick="generateQR()">Generate QR for Payment</button>
+      <div id="qrcode"></div>
+    </div>
+  </div>
+
+  <!-- ------------------- Dashboard Section ------------------- -->
+  <div id="dashboardSection" class="section" style="display:none">
+    <h2>Admin Dashboard</h2>
+
+    <div class="summary">
+      <p id="totalRides">Total Rides: 0</p>
+      <p id="totalRevenue">Total Revenue: ₹0</p>
+    </div>
+
+    <table id="fareTable">
+      <thead>
+        <tr>
+          <th>Card ID</th>
+          <th>From</th>
+          <th>To</th>
+          <th>Fare (₹)</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <h3>Rides Per Stop</h3>
+    <canvas id="ridesChart" width="300" height="200"></canvas>
+  </div>
+
+</body>
+</html>

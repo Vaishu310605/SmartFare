@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartFare – APSRTC Style Dashboard</title>
+<style>
+  body {
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(120deg, #004aad, #5de0e6);
+    color: #fff;
+    margin: 0;
+    text-align: center;
+  }
+  header {
+    background: #002b6b;
+    padding: 15px;
+    font-size: 24px;
+    font-weight: bold;
+    letter-spacing: 1px;
+  }
+  nav button {
+    background: #fff;
+    color: #004aad;
+    border: none;
+    padding: 10px 20px;
+    margin: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  nav button:hover {
+    background: #5de0e6;
+    color: #fff;
+  }
+  .section {
+    display: none;
+    background: rgba(255, 255, 255, 0.15);
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 600px;
+  }
+  .active {
+    display: block;
+  }
+  input, select {
+    width: 80%;
+    padding: 10px;
+    margin: 8px;
+    border-radius: 8px;
+    border: none;
+  }
+  button.action {
+    background: #002b6b;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  button.action:hover {
+    background: #5de0e6;
+  }
+  #balanceBox {
+    display: none;
+    background: rgba(0,0,0,0.3);
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 10px;
+  }
+</style>
+</head>
+
+<body>
+<header>🚍 SmartFare Dashboard</header>
+
+<nav>
+  <button onclick="showSection('linkBank')">Link Bank</button>
+  <button onclick="showSection('fareCalc')">Calculate Fare</button>
+  <button onclick="showSection('recharge')">Recharge</button>
+  <button onclick="showSection('history')">Ride History</button>
+</nav>
+
+<!-- Bank Linking Section -->
+<section id="linkBank" class="section active">
+  <h2>🔗 Link Your Bank</h2>
+  <input type="text" id="bankCardId" placeholder="Enter Smart Card ID"><br>
+  <input type="text" id="bankAcc" placeholder="Enter Bank Account No"><br>
+  <input type="password" id="pin" maxlength="4" placeholder="Set 4-digit PIN"><br>
+  <label>Gender:</label>
+  <select id="gender">
+    <option value="Male">Male</option>
+    <option value="Female">Female</option>
+  </select><br>
+  <button class="action" onclick="linkBank()">Link Bank</button>
+  <p id="msg"></p>
+  <div id="balanceBox">💰 Balance: ₹<span id="balanceAmount">0</span></div>
+</section>
+
+<!-- Fare Calculation Section -->
+<section id="fareCalc" class="section">
+  <h2>💸 Calculate Fare</h2>
+  <input type="text" id="cardId" placeholder="Enter Card ID"><br>
+  <label>From:</label>
+  <select id="fromStop">
+    <option>Tirupati</option><option>Chittoor</option>
+    <option>Madanapalle</option><option>Punganur</option><option>Palamaner</option>
+  </select><br>
+  <label>To:</label>
+  <select id="toStop">
+    <option>Tirupati</option><option>Chittoor</option>
+    <option>Madanapalle</option><option>Punganur</option><option>Palamaner</option>
+  </select><br>
+  <button class="action" onclick="calculateFare()">Calculate</button>
+  <p id="result"></p>
+</section>
+
+<!-- Recharge Section -->
+<section id="recharge" class="section">
+  <h2>💰 Recharge Wallet</h2>
+  <input type="text" id="rechargeCardId" placeholder="Enter Card ID"><br>
+  <input type="number" id="rechargeAmount" placeholder="Enter Amount (₹)"><br>
+  <button class="action" onclick="rechargeCard()">Recharge</button>
+</section>
+
+<!-- Ride History Section -->
+<section id="history" class="section">
+  <h2>📊 Ride History</h2>
+  <input type="text" id="cardIdHistory" placeholder="Enter Card ID"><br>
+  <button class="action" onclick="showRides()">View History</button>
+  <p id="rideHistory"></p>
+</section>
+
+<script>
+let users = {};
+let rides = [];
+
+function showSection(id) {
+  document.querySelectorAll(".section").forEach(sec => sec.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
+function linkBank() {
+  const cardId = document.getElementById("bankCardId").value.trim();
+  const bankAcc = document.getElementById("bankAcc").value.trim();
+  const pin = document.getElementById("pin").value.trim();
+  const gender = document.getElementById("gender").value;
+  
+  if (!cardId || !bankAcc || !pin) {
+    document.getElementById("msg").innerText = "⚠️ Please fill all details.";
+    return;
+  }
+
+  users[cardId] = { bankAcc, pin, balance: 500, gender };
+  document.getElementById("msg").innerText = "✅ Bank Linked Successfully!";
+  document.getElementById("balanceAmount").innerText = users[cardId].balance;
+  document.getElementById("balanceBox").style.display = "block";
+}
+
+function calculateFare() {
+  const cardId = document.getElementById("cardId").value.trim();
+  const from = document.getElementById("fromStop").value;
+  const to = document.getElementById("toStop").value;
+
+  if (!users[cardId]) {
+    document.getElementById("result").innerText = "❌ Card not linked!";
+    return;
+  }
+
+  const gender = users[cardId].gender;
+
+  if (from === to) {
+    document.getElementById("result").innerText = "⚠️ Source and destination cannot be the same.";
+    return;
+  }
+
+  const stops = ["Tirupati", "Chittoor", "Madanapalle", "Punganur", "Palamaner"];
+  const fromIndex = stops.indexOf(from);
+  const toIndex = stops.indexOf(to);
+
+  if (fromIndex === -1 || toIndex === -1) {
+    document.getElementById("result").innerText = "⚠️ Invalid stops selected.";
+    return;
+  }
+
+  const distance = Math.abs(toIndex - fromIndex);
+  let fare = distance * 50;
+
+  if (gender === "Female") fare *= 0.8;
+
+  if (users[cardId].balance < fare) {
+    document.getElementById("result").innerText = "❌ Insufficient balance. Please recharge.";
+    return;
+  }
+
+  users[cardId].balance -= fare;
+  rides.push({ cardId, from, to, fare, gender, date: new Date().toLocaleString() });
+
+  document.getElementById("result").innerText = `✅ Trip successful! Fare: ₹${fare.toFixed(2)} | Remaining Balance: ₹${users[cardId].balance}`;
+  document.getElementById("balanceAmount").innerText = users[cardId].balance;
+}
+
+function rechargeCard() {
+  const cardId = document.getElementById("rechargeCardId").value.trim();
+  const amount = parseFloat(document.getElementById("rechargeAmount").value);
+  if (!users[cardId]) {
+    alert("Card not linked!");
+    return;
+  }
+  users[cardId].balance += amount;
+  alert(`✅ Recharged ₹${amount}. New balance: ₹${users[cardId].balance}`);
+  document.getElementById("balanceAmount").innerText = users[cardId].balance;
+}
+
+function showRides() {
+  const cardId = document.getElementById("cardIdHistory").value.trim();
+  const userRides = rides.filter(r => r.cardId === cardId);
+  if (userRides.length === 0) {
+    document.getElementById("rideHistory").innerText = "No rides found.";
+    return;
+  }
+  document.getElementById("rideHistory").innerHTML = userRides.map(
+    r => `🚌 ${r.from} → ${r.to} | ₹${r.fare} | ${r.date}`
+  ).join("<br>");
+}
+</script>
+</body>
+</html>

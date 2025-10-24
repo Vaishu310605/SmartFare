@@ -1,0 +1,32 @@
+{
+  "users": {
+    "123": {
+      "bankAcc": "3254",
+      "pin": "1323",
+      "balance": 1675
+    }
+  },
+  "fares": [
+    {
+      "cardId": "123",
+      "from": "Vijayawada",
+      "to": "Guntur",
+      "fare": 100,
+      "time": "21/10/2025, 7:43:15 am"
+    },
+    {
+      "cardId": "123",
+      "from": "Guntur",
+      "to": "Vijayawada",
+      "fare": 100,
+      "time": "21/10/2025, 7:43:25 am"
+    },
+    {
+      "cardId": "123",
+      "from": "Guntur",
+      "to": "Nellore",
+      "fare": 100,
+      "time": "21/10/2025, 7:44:05 am"
+    }
+  ]
+}
